@@ -1,4 +1,5 @@
 #include "calculator.h"
+#include <stdio.h>
 #include <limits.h>
 
 static int __calculator_sum(int* array, int size);

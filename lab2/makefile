@@ -22,3 +22,6 @@ $(OUT_DIR)/%.o:%.c
 
 clean:
 	rm -rf $(OUT_DIR)/* ;rm main
+
+all:
+	make main

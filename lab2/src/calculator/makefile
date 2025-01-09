@@ -1,3 +1,3 @@
-m_dir:= $(dir $(lastword $(MAKEFILE_LIST)))
+calculator_dir:= $(dir $(lastword $(MAKEFILE_LIST)))
 
-DEPS += $(m_dir)calculator.c
+DEPS += $(calculator_dir)calculator.c

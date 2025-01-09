@@ -12,13 +12,13 @@ int main() {
     scanf("%d", &n);
 
     if (n <= 0) {
-        printf("Invalid number of elements. Exiting program.\n");
+        printf("Invalid number of elements\n");
         return 1;
     }
 
     int* array = (int*)malloc(n * sizeof(int));
     if (array == NULL) {
-        printf("Memory allocation failed. Exiting program.\n");
+        printf("Memory allocation failed\n");
         return 1;
     }
 

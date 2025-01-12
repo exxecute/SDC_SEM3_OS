@@ -1,8 +1,8 @@
 #include "memory_controller.h"
 #include <string.h>
 
-#define START_CAPACITY_BYTES 500
-#define MAX_CAPACITY_BYTES 50000
+#define START_CAPACITY_BYTES    500000
+#define MAX_CAPACITY_BYTES      50000000
 
 typedef struct memory_controller_data
 {

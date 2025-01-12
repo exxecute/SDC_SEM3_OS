@@ -81,3 +81,12 @@ memory_controller_error_e memory_controller_multiply(memory_controller_t control
     if(ths->capacity > MAX_CAPACITY_BYTES) ths->capacity = MAX_CAPACITY_BYTES;
     ths->array = (uint8_t*)realloc(ths->array, ths->capacity);
 }
+
+memory_controller_error_e memory_controller_increase_to(memory_controller_t controller, int size)
+{
+    memory_controller_data_t* ths = CONVERT_POINTER(controller);
+    if (ths->capacity >= MAX_CAPACITY_BYTES || size < ths->capacity) return ERROR;
+    ths->capacity = size;
+    if(ths->capacity > MAX_CAPACITY_BYTES) ths->capacity = MAX_CAPACITY_BYTES;
+    ths->array = (uint8_t*)realloc(ths->array, ths->capacity);
+}

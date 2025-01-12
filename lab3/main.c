@@ -10,6 +10,17 @@
 
 #include "string.h"
 
+static const int memory_sizes_test[] =
+{
+    500,
+    1000,
+    2000,
+    8000,
+    16000,
+    32000,
+    50000,
+};
+
 int main(void) {
     uint8_t * array = (uint8_t*)malloc(500);
 
@@ -25,79 +36,29 @@ int main(void) {
     }
     memory_controller_print(controller);
 
-    printf("\nPush array 500Byte\n");
-    memory_controller_push_array(controller, array, 10);
-    memory_controller_print(controller);
+    for(int i = 0; i < 7; i++)
+    {
+        array = (uint8_t*)realloc(array, memory_sizes_test[i]);
 
-    printf("\nPush array with increasing memory 500Byte\n");
-    memory_controller_push_array(controller, array, 500);
-    memory_controller_print(controller);
+        printf("\nIncrease to %d Byte\n", memory_sizes_test[i]);
+        memory_controller_increase_to(controller, memory_sizes_test[i]);
+        memory_controller_print(controller);
+        
+        printf("\nPush array %d Byte\n", memory_sizes_test[i]);
+        memory_controller_push_array(controller, array, memory_sizes_test[i]);
+        memory_controller_print(controller);
 
-    printf("\nFlush\n");
-    memory_controller_flush(controller);
-    memory_controller_print(controller);
-    memory_controller_multiply_2(controller);
+        printf("\nPush array with increasing memory %d Byte\n", memory_sizes_test[i]);
+        memory_controller_push_array(controller, array, memory_sizes_test[i]);
+        memory_controller_print(controller);
 
-    array = (uint8_t*)realloc(array, 1000);
-
-    printf("\nPush array 1Kbyte\n");
-    memory_controller_push_array(controller, array, 1000);
-    memory_controller_print(controller);
-
-    memory_controller_flush(controller);
-    printf("\nPush array with increasing memory 1Kbyte\n");
-    memory_controller_push_array(controller, array, 1000);
-    memory_controller_print(controller);
-
-    array = (uint8_t*)realloc(array, 2000);
-
-
-    printf("\nFlush\n");
-    memory_controller_flush(controller);
-    memory_controller_print(controller);
-    memory_controller_multiply_2(controller);
-    memory_controller_multiply_2(controller);
-
-    printf("\nPush array 2Kbyte\n");
-    memory_controller_push_array(controller, array, 2000);
-    memory_controller_print(controller);
-
-    memory_controller_flush(controller);
-
-    printf("\nPush array with increasing memory 2Kbyte\n");
-    memory_controller_push_array(controller, array, 2000);
-    memory_controller_print(controller);
-
-    printf("\nFlush\n");
-    memory_controller_flush(controller);
-    memory_controller_print(controller);
-    memory_controller_multiply_2(controller);
-    memory_controller_multiply_2(controller);
-    memory_controller_multiply_2(controller);
-
-    printf("\nPush array 4Kbyte\n");
-    memory_controller_push_array(controller, array, 4000);
-    memory_controller_print(controller);
-
-    memory_controller_flush(controller);
-    array = (uint8_t*)realloc(array, 4000);
-
-    printf("\nPush array with increasing memory 4Kbyte\n");
-    memory_controller_push_array(controller, array, 4000);
-    memory_controller_print(controller);
-
-    printf("\nFlush\n");
-    memory_controller_flush(controller);
-    memory_controller_print(controller);
-    memory_controller_multiply_2(controller);
-    memory_controller_multiply_2(controller);
-    memory_controller_multiply_2(controller);
-
-    printf("\nPush array 8Kbyte\n");
-    memory_controller_push_array(controller, array, 8000);
-    memory_controller_print(controller);
+        printf("\nFlush\n");
+        memory_controller_flush(controller);
+        memory_controller_print(controller);
+    }
 
     memory_controller_dtr(controller);
+    free(array);
     
     return 0;
 }

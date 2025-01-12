@@ -24,4 +24,4 @@ clean:
 	rm -rf $(OUT_DIR)/* ;rm main
 
 all:
-	make main
+	make main; ./main

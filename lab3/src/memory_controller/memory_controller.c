@@ -34,26 +34,17 @@ void memory_controller_print(memory_controller_t controller)
     printf("Memory controller:\n");
     printf("Capacity: %d\n", ths->capacity);
     printf("Size: %d\n", ths->size);
-    printf("Array: ");
-    for (int i = 0; i < ths->size; i++) {
-        printf("%d ", ths->array[i]);
-    }
-    printf("\n");
 }
 
 memory_controller_error_e memory_controller_multiply_2(memory_controller_t controller)
 {
-    memory_controller_data_t* ths = CONVERT_POINTER(controller);
-    if(ths->capacity >= MAX_CAPACITY_BYTES) return ERROR;
-    ths->capacity *= 2;
-    if(ths->capacity > MAX_CAPACITY_BYTES) ths->capacity = MAX_CAPACITY_BYTES;
-    ths->array = (uint8_t*)realloc(ths->array, ths->capacity);
+    return memory_controller_multiply(controller, 2);
 }
 
 memory_controller_error_e memory_controller_push(memory_controller_t controller, uint8_t value)
 {
     memory_controller_data_t* ths = CONVERT_POINTER(controller);
-    if (ths->size >= ths->capacity) {
+    if (ths->size > ths->capacity) {
         memory_controller_error_e status = memory_controller_multiply_2(controller);
         if (status == ERROR) return ERROR;
     }
@@ -65,10 +56,28 @@ memory_controller_error_e memory_controller_push_array(memory_controller_t contr
 {
     memory_controller_data_t* ths = CONVERT_POINTER(controller);
     int __new_size = ths->size + size;
-    if (__new_size >= ths->capacity) {
+    while (__new_size > ths->capacity) {
         memory_controller_error_e status = memory_controller_multiply_2(controller);
         if (status == ERROR) return ERROR;
     }
-    // memcpy(ths->array + ths->size, array, size);
+    memcpy(ths->array + ths->size, array, size);
     ths->size = __new_size;
+}
+
+void memory_controller_flush(memory_controller_t controller)
+{
+    memory_controller_data_t* ths = CONVERT_POINTER(controller);
+    ths->size = 0;
+    free(ths->array);
+    ths->array = (uint8_t*)malloc(START_CAPACITY_BYTES);
+    ths->capacity = START_CAPACITY_BYTES;
+}
+
+memory_controller_error_e memory_controller_multiply(memory_controller_t controller, int value)
+{
+    memory_controller_data_t* ths = CONVERT_POINTER(controller);
+    if (ths->capacity >= MAX_CAPACITY_BYTES) return ERROR;
+    ths->capacity *= value;
+    if(ths->capacity > MAX_CAPACITY_BYTES) ths->capacity = MAX_CAPACITY_BYTES;
+    ths->array = (uint8_t*)realloc(ths->array, ths->capacity);
 }

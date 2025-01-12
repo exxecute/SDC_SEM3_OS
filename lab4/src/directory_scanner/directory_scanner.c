@@ -46,8 +46,20 @@ void directory_scanner_scan(directory_scanner_t directory_scanner, const char* d
     while ((entry = readdir(dir)) != NULL) {
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
             continue;
-        node_insert_node(ths->list, entry->d_name);
+        node_insert_node(&ths->list, entry->d_name);
     }
 
     closedir(dir);
+}
+
+void directory_scanner_print(directory_scanner_t directory_scanner) 
+{
+    node_print_list(directory_scanner->list);
+}
+
+void directory_scanner_print_directory_indo(directory_scanner_t directory_scanner, const char* name)
+{
+    node_t* node = node_find_node(directory_scanner->list, name);
+    if (!node) return;
+    node_print_node_info(node);
 }

@@ -29,6 +29,7 @@ int main(void)
     char __is_tui = 1;
 
     while (__is_tui) {
+        printf("\n");
         for(int tui_variant = TUI_SCAN; tui_variant < TUI_LAST; tui_variant++)
         {
             printf("%d. %s\n", tui_variant + 1, TUI_VARIANTS[tui_variant]);
@@ -36,12 +37,12 @@ int main(void)
 
         printf("Enter your choice: ");
         scanf("%d", &choice);
-        getchar();
 
         switch (--choice) {
             case TUI_SCAN:
             {
                 printf("Enter directory path (default is './'): ");
+                getchar();
                 fgets(dir_path, 256, stdin);
                 dir_path[strcspn(dir_path, "\n")] = '\0';
                 if (strlen(dir_path) == 0) strcpy(dir_path, "./");
@@ -51,25 +52,30 @@ int main(void)
             }
             case TUI_PRINT_LIST:
             {
-                printf("List:\n");
+                printf("List: ");
                 directory_scanner_print(directory_scanner);
+                printf("\n");
                 break;
             }
             case TUI_PRINT_ELEMENT_INFO:
             {
                 printf("Enter element name: ");
+                getchar();
                 fgets(input, 256, stdin);
                 input[strcspn(input, "\n")] = '\0';
                 directory_scanner_print_directory_indo(directory_scanner, input);
+                printf("\n");
                 break;
             }
             case TUI_EXIT:
             {
                 __is_tui = 0;
+                break;
             }
             default:
             {
                 printf("Please try again.\n");
+                break;
             }
         }
     }

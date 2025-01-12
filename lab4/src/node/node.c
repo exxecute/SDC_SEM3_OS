@@ -70,8 +70,9 @@ void node_print_list(node_t* head)
 {
     while (head) 
     {
-        printf("%s->", head->name);
+        printf("%s", head->name);
         head = head->next;
+        if (head) printf(", ");
     }
 }
 

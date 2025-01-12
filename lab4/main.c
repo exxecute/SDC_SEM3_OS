@@ -1,4 +1,23 @@
 #include "src/directory_scanner/directory_scanner.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef enum tui_variants
+{
+    TUI_SCAN = 0,
+    TUI_PRINT_LIST,
+    TUI_PRINT_ELEMENT_INFO,
+    TUI_EXIT,
+    TUI_LAST,
+};
+
+const static char* TUI_VARIANTS[TUI_LAST] = {
+    "Scan directory",
+    "Print list",
+    "Print element info",
+    "Exit",
+};
 
 int main(void)
 {
@@ -10,16 +29,18 @@ int main(void)
     char __is_tui = 1;
 
     while (__is_tui) {
-        printf("\n1. Scan directory\n");
-        printf("2. Print list\n");
-        printf("3. Print element info\n");
-        printf("4. Exit\n");
+        for(int tui_variant = TUI_SCAN; tui_variant < TUI_LAST; tui_variant++)
+        {
+            printf("%d. %s\n", tui_variant + 1, TUI_VARIANTS[tui_variant]);
+        }
+
         printf("Enter your choice: ");
         scanf("%d", &choice);
         getchar();
 
-        switch (choice) {
-            case 1:
+        switch (--choice) {
+            case TUI_SCAN:
+            {
                 printf("Enter directory path (default is './'): ");
                 fgets(dir_path, 256, stdin);
                 dir_path[strcspn(dir_path, "\n")] = '\0';
@@ -27,21 +48,29 @@ int main(void)
                 directory_scanner_scan(directory_scanner, dir_path);
                 printf("Directory scanned successfully.\n");
                 break;
-            case 2:
-                printf("list of elements:\n");
+            }
+            case TUI_PRINT_LIST:
+            {
+                printf("List:\n");
                 directory_scanner_print(directory_scanner);
                 break;
-            case 3:
+            }
+            case TUI_PRINT_ELEMENT_INFO:
+            {
                 printf("Enter element name: ");
                 fgets(input, 256, stdin);
                 input[strcspn(input, "\n")] = '\0';
                 directory_scanner_print_directory_indo(directory_scanner, input);
                 break;
-            case 4:
-                printf("Exiting...\n");
+            }
+            case TUI_EXIT:
+            {
                 __is_tui = 0;
+            }
             default:
-                printf("Invalid choice. Please try again.\n");
+            {
+                printf("Please try again.\n");
+            }
         }
     }
 

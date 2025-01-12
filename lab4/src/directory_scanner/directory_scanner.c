@@ -46,7 +46,8 @@ void directory_scanner_scan(directory_scanner_t directory_scanner, const char* d
     while ((entry = readdir(dir)) != NULL) {
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
             continue;
-        node_insert_node(&ths->list, entry->d_name);
+
+        node_insert_node(&ths->list, entry->d_name, entry->d_ino, entry->d_type == DT_DIR ? 'd' : 'f');
     }
 
     closedir(dir);

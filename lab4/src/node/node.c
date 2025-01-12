@@ -1,6 +1,6 @@
 #include "node.h"
 
-node_t* node_ctr(const char* name) {
+node_t* node_ctr(const char* name, ino_t inode, char type) {
     node_t* new_node = (node_t*)malloc(sizeof(node_t));
     if (!new_node) {
         perror("Memory allocation failed");
@@ -8,6 +8,8 @@ node_t* node_ctr(const char* name) {
     }
     strncpy(new_node->name, name, NODE_MAX_NAME_LENGTH);
     new_node->next = NULL;
+    new_node->inode = inode;
+    new_node->type = type;
     return new_node;
 }
 
@@ -16,9 +18,9 @@ void node_dtr(node_t* node)
     free(node);
 }
 
-void node_insert_node(node_t** head, const char* name) 
+void node_insert_node(node_t** head, const char* name, ino_t inode, char type) 
 {
-    node_t* new_node = node_ctr(name);
+    node_t* new_node = node_ctr(name, inode, type);
     new_node->next = *head;
     *head = new_node;
 }
@@ -81,6 +83,8 @@ void node_print_node_info(node_t* node)
     if (node) 
     {
         printf("Name: %s\n", node->name);
+        printf("Inode: %1u\n", node->inode);
+        printf("Type: %s", node->type == 'd' ? "directory" : "file");
     } 
     else 
     {

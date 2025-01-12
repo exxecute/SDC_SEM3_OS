@@ -53,21 +53,21 @@ int main(void) {
     {
         array = (uint8_t*)realloc(array, memory_sizes_test[i]);
 
-        printf("\nIncrease to %d Byte\n", memory_sizes_test[i]);
+        printf("Increase to %d Byte ", memory_sizes_test[i]);
         timer_start(&timer);
         memory_controller_increase_to(controller, memory_sizes_test[i]);
         printf("Time: %f\n", timer_stop(&timer));
         memory_controller_print(controller);
 
-        printf("\nPush array %d Byte\n", memory_sizes_test[i]);
+        printf("Push array %d Byte ", memory_sizes_test[i]);
         timer_start(&timer);
         memory_controller_push_array(controller, array, memory_sizes_test[i]);
         printf("Time: %f\n", timer_stop(&timer));
         memory_controller_print(controller);
 
-        printf("\nPush array with increasing memory %d Byte\n", memory_sizes_test[i]);
+        printf("Push array with increasing memory %d Byte ", memory_sizes_test[i]);
         timer_start(&timer);
-        memory_controller_push_array(controller, array, memory_sizes_test[i]);
+        printf("error = %d\n", memory_controller_push_array(controller, array, memory_sizes_test[i]));
         printf("Time: %f\n", timer_stop(&timer));
         memory_controller_print(controller);
 

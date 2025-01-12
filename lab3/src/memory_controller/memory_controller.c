@@ -30,10 +30,12 @@ void memory_controller_dtr(memory_controller_t controller)
 
 void memory_controller_print(memory_controller_t controller)
 {
+#if FLAG_PRINT_ARRAY == 1
     memory_controller_data_t* ths = CONVERT_POINTER(controller);
     printf("Memory controller:\n");
     printf("Capacity: %d\n", ths->capacity);
     printf("Size: %d\n", ths->size);
+#endif
 }
 
 memory_controller_error_e memory_controller_multiply_2(memory_controller_t controller)

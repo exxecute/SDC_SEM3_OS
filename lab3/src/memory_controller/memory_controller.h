@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define FLAG_PRINT_ARRAY        0
+
 typedef struct memory_controller_data_t* memory_controller_t;
 
 typedef enum memory_controller_error

@@ -1,8 +1,12 @@
 #include "memory_controller.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define START_CAPACITY_BYTES    500000
 #define MAX_CAPACITY_BYTES      50000000
+#define BLOCK_SIZE              128
+#define DEFAULT_MULTIPLIER      3
 
 typedef struct memory_controller_data
 {
@@ -38,16 +42,16 @@ void memory_controller_print(memory_controller_t controller)
 #endif
 }
 
-memory_controller_error_e memory_controller_multiply_2(memory_controller_t controller)
+memory_controller_error_e memory_controller_multiply_default(memory_controller_t controller)
 {
-    return memory_controller_multiply(controller, 2);
+    return memory_controller_multiply(controller, DEFAULT_MULTIPLIER);
 }
 
 memory_controller_error_e memory_controller_push(memory_controller_t controller, uint8_t value)
 {
     memory_controller_data_t* ths = CONVERT_POINTER(controller);
     if (ths->size > ths->capacity) {
-        memory_controller_error_e status = memory_controller_multiply_2(controller);
+        memory_controller_error_e status = memory_controller_multiply_default(controller);
         if (status == ERROR) return ERROR;
     }
     ths->array[ths->size] = value;
@@ -59,11 +63,32 @@ memory_controller_error_e memory_controller_push_array(memory_controller_t contr
     memory_controller_data_t* ths = CONVERT_POINTER(controller);
     int __new_size = ths->size + size;
     while (__new_size > ths->capacity) {
-        memory_controller_error_e status = memory_controller_multiply_2(controller);
+        memory_controller_error_e status = memory_controller_multiply_default(controller);
         if (status == ERROR) return ERROR;
     }
     memcpy(ths->array + ths->size, array, size);
     ths->size = __new_size;
+}
+
+memory_controller_error_e memory_controller_push_array_by_blocks(memory_controller_t controller, uint8_t* array, int size)
+{
+    int __block_size = BLOCK_SIZE;
+    int __iterations = size / __block_size;
+    memory_controller_error_e __status = OK;
+
+    for(int i = 0; i < __iterations; i++)
+    {
+        uint8_t * __sub_block = (uint8_t*)calloc(0, __block_size);
+        memcpy(__sub_block, array + i * __block_size, __block_size);
+
+        memory_controller_push_array(controller, __sub_block, __block_size);
+        size -= __block_size;
+        if(__block_size > size) __block_size = size;
+
+        free(__sub_block);
+    }
+
+    return __status;
 }
 
 void memory_controller_flush(memory_controller_t controller)

@@ -17,9 +17,10 @@ void memory_controller_ctr(memory_controller_t controller);
 void memory_controller_dtr(memory_controller_t controller);
 void memory_controller_print(memory_controller_t controller);
 memory_controller_error_e memory_controller_multiply(memory_controller_t controller, int value);
-memory_controller_error_e memory_controller_multiply_2(memory_controller_t controller);
+memory_controller_error_e memory_controller_multiply_default(memory_controller_t controller);
 memory_controller_error_e memory_controller_push(memory_controller_t controller, uint8_t value);
 memory_controller_error_e memory_controller_push_array(memory_controller_t controller, uint8_t* array, int size);
+memory_controller_error_e memory_controller_push_array_by_blocks(memory_controller_t controller, uint8_t* array, int size);
 void memory_controller_flush(memory_controller_t controller);
 memory_controller_error_e memory_controller_increase_to(memory_controller_t controller, int size);
 

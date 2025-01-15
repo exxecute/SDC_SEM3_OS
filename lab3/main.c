@@ -9,6 +9,9 @@
 #include "src/memory_controller/memory_controller.h"
 #include "src/timer/timer.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+
 static const int memory_sizes_test[] =
 {
     500,
@@ -61,13 +64,13 @@ int main(void) {
 
         printf("Push array %d Byte ", memory_sizes_test[i]);
         timer_start(&timer);
-        memory_controller_push_array(controller, array, memory_sizes_test[i]);
+        memory_controller_push_array_by_blocks(controller, array, memory_sizes_test[i]);
         printf("Time: %f\n", timer_stop(&timer));
         memory_controller_print(controller);
 
         printf("Push array with increasing memory %d Byte ", memory_sizes_test[i]);
         timer_start(&timer);
-        printf("error = %d\n", memory_controller_push_array(controller, array, memory_sizes_test[i]));
+        memory_controller_push_array_by_blocks(controller, array, memory_sizes_test[i]);
         printf("Time: %f\n", timer_stop(&timer));
         memory_controller_print(controller);
 

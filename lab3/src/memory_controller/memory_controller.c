@@ -75,9 +75,14 @@ memory_controller_error_e memory_controller_push_array(memory_controller_t contr
     ths->size = __new_size;
 }
 
-memory_controller_error_e memory_controller_push_array_by_blocks(memory_controller_t controller, uint8_t* array, int size)
+memory_controller_error_e memory_controller_push_array_by_blocks_default(memory_controller_t controller, uint8_t* array, int size)
 {
-    int __block_size = BLOCK_SIZE;
+    return memory_controller_push_array_by_blocks(controller, array, size, BLOCK_SIZE);
+}
+
+memory_controller_error_e memory_controller_push_array_by_blocks(memory_controller_t controller, uint8_t* array, int size, int block_size)
+{
+    int __block_size = block_size;
     int __iterations = size / __block_size;
     memory_controller_error_e __status = OK;
 
@@ -99,9 +104,14 @@ memory_controller_error_e memory_controller_push_array_by_blocks(memory_controll
 memory_controller_error_e memory_controller_push_controller_array(memory_controller_t dst, memory_controller_t src, int size)
 {
     memory_controller_data_t* ths = CONVERT_POINTER(src);
-    return memory_controller_push_array_by_blocks(dst, ths->array, size);
+    return memory_controller_push_array_by_blocks_default(dst, ths->array, size);
 }
 
+memory_controller_error_e memory_controller_push_controller_array_block(memory_controller_t dst, memory_controller_t src, int size, int block_size)
+{
+    memory_controller_data_t* ths = CONVERT_POINTER(src);
+    return memory_controller_push_array_by_blocks(dst, ths->array, size, block_size);
+}
 void memory_controller_flush(memory_controller_t controller)
 {
     memory_controller_data_t* ths = CONVERT_POINTER(controller);

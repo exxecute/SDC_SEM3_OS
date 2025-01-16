@@ -14,7 +14,7 @@
 
 #define EASY_TASK   1
 #define HARD_TASK   0
-
+#define ADVANCED_TASK   1
 
 #if EASY_TASK == 1
 void easy_task(void)
@@ -52,6 +52,29 @@ void easy_task(void)
     memory_controller_dtr(controller_B);
 }
 #endif // EASY_TASK
+
+#if ADVANCED_TASK == 1
+void advanced_task(void)
+{
+    int len_a = 100000000;
+    int len_b = 100000000;
+
+    int small_portion = 1000;
+    int large_portion = 1000000;
+
+    memory_controller_t controller_A;
+    memory_controller_t controller_B;
+
+    memory_controller_ctr_size(controller_A, len_a);
+    memory_controller_ctr_size(controller_B, len_b);
+
+    TIMER_t timer;
+
+    timer_start(&timer);
+    memory_controller_push_controller_array(controller_A, controller_B, small_portion);    
+
+}
+#endif // ADVANCED_TASK
 
 #if HARD_TASK == 1
 static const int memory_sizes_test[] =
@@ -131,6 +154,9 @@ int main(void) {
 #if EASY_TASK == 1
     easy_task();
 #endif // EASY_TASK
+#if ADVANCED_TASK == 1
+    advanced_task();
+#endif // ADVANCED_TASK
 #if HARD_TASK == 1
     hard_task();
 #endif // HARD_TASK

@@ -88,7 +88,7 @@ memory_controller_error_e memory_controller_push_array_by_blocks(memory_controll
 
     for(int i = 0; i < __iterations; i++)
     {
-        uint8_t * __sub_block = (uint8_t*)calloc(0, __block_size);
+        uint8_t * __sub_block = (uint8_t*)malloc(__block_size);
         memcpy(__sub_block, array + i * __block_size, __block_size);
 
         memory_controller_push_array(controller, __sub_block, __block_size);

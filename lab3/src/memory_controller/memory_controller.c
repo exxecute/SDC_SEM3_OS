@@ -19,10 +19,15 @@ typedef struct memory_controller_data
 
 void memory_controller_ctr(memory_controller_t controller)
 {
+    memory_controller_ctr_size(controller, START_CAPACITY_BYTES);
+}
+
+void memory_controller_ctr_size(memory_controller_t controller, int size)
+{
     memory_controller_data_t* ths = (memory_controller_data_t*)controller;
     ths->size = 0;
-    ths->array = (uint8_t*)malloc(START_CAPACITY_BYTES);
-    ths->capacity = START_CAPACITY_BYTES;
+    ths->array = (uint8_t*)malloc(size);
+    ths->capacity = size;
     ths->size = 0;
 }
 
@@ -70,15 +75,20 @@ memory_controller_error_e memory_controller_push_array(memory_controller_t contr
     ths->size = __new_size;
 }
 
-memory_controller_error_e memory_controller_push_array_by_blocks(memory_controller_t controller, uint8_t* array, int size)
+memory_controller_error_e memory_controller_push_array_by_blocks_default(memory_controller_t controller, uint8_t* array, int size)
 {
-    int __block_size = BLOCK_SIZE;
+    return memory_controller_push_array_by_blocks(controller, array, size, BLOCK_SIZE);
+}
+
+memory_controller_error_e memory_controller_push_array_by_blocks(memory_controller_t controller, uint8_t* array, int size, int block_size)
+{
+    int __block_size = block_size;
     int __iterations = size / __block_size;
     memory_controller_error_e __status = OK;
 
     for(int i = 0; i < __iterations; i++)
     {
-        uint8_t * __sub_block = (uint8_t*)calloc(0, __block_size);
+        uint8_t * __sub_block = (uint8_t*)malloc(__block_size);
         memcpy(__sub_block, array + i * __block_size, __block_size);
 
         memory_controller_push_array(controller, __sub_block, __block_size);
@@ -91,6 +101,17 @@ memory_controller_error_e memory_controller_push_array_by_blocks(memory_controll
     return __status;
 }
 
+memory_controller_error_e memory_controller_push_controller_array(memory_controller_t dst, memory_controller_t src, int size)
+{
+    memory_controller_data_t* ths = CONVERT_POINTER(src);
+    return memory_controller_push_array_by_blocks_default(dst, ths->array, size);
+}
+
+memory_controller_error_e memory_controller_push_controller_array_block(memory_controller_t dst, memory_controller_t src, int size, int block_size)
+{
+    memory_controller_data_t* ths = CONVERT_POINTER(src);
+    return memory_controller_push_array_by_blocks(dst, ths->array, size, block_size);
+}
 void memory_controller_flush(memory_controller_t controller)
 {
     memory_controller_data_t* ths = CONVERT_POINTER(controller);
@@ -109,6 +130,13 @@ memory_controller_error_e memory_controller_multiply(memory_controller_t control
     ths->array = (uint8_t*)realloc(ths->array, ths->capacity);
 }
 
+memory_controller_error_e memory_controller_decrese(memory_controller_t controller, int value)
+{
+    memory_controller_data_t* ths = CONVERT_POINTER(controller);
+    ths->capacity /= value;
+    ths->array = (uint8_t*)realloc(ths->array, ths->capacity);
+}
+
 memory_controller_error_e memory_controller_increase_to(memory_controller_t controller, int size)
 {
     memory_controller_data_t* ths = CONVERT_POINTER(controller);
@@ -116,4 +144,10 @@ memory_controller_error_e memory_controller_increase_to(memory_controller_t cont
     ths->capacity = size;
     if(ths->capacity > MAX_CAPACITY_BYTES) ths->capacity = MAX_CAPACITY_BYTES;
     ths->array = (uint8_t*)realloc(ths->array, ths->capacity);
+}
+
+int memory_controller_get_capacity(memory_controller_t controller)
+{
+    memory_controller_data_t* ths = CONVERT_POINTER(controller);
+    return ths->capacity;
 }

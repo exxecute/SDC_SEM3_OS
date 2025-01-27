@@ -13,7 +13,7 @@ static void __file_writer_open(file_writer_t * file_writer, char * path);
 void file_writer_write(char * file, char * data, int size)
 {
     file_writer_t file_writer;
-    file_writer.file_descriptor = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    file_writer.file_descriptor = open(file, O_CREAT | O_RDWR | O_APPEND, 0644);
     write(file_writer.file_descriptor, data, size);
     close(file_writer.file_descriptor);
 }

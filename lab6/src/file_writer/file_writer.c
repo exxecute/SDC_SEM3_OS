@@ -18,7 +18,7 @@ void file_writer_write(char * file, char * data, int size)
     close(file_writer.file_descriptor);
 }
 
-void file_writer_count_lines(char * file)
+int file_writer_count_lines(char * file)
 {
     file_writer_t file_writer;
     file_writer.file_descriptor = open(file, O_RDONLY);

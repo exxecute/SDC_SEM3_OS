@@ -70,8 +70,12 @@ void advanced_task(void)
 
     TIMER_t timer;
 
-    timer_start(&timer);
-    memory_controller_push_controller_array(controller_A, controller_B, small_portion);    
+    for(int i = 0; i < 10; i++)
+    {
+        timer_start(&timer);
+        memory_controller_push_controller_array(controller_A, controller_B, small_portion);   
+        printf("Push controller array Time: %f, iteration: %d\n", timer_stop(&timer), i + 1);
+    } 
 
 }
 #endif // ADVANCED_TASK
